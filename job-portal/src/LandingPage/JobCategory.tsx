@@ -22,6 +22,7 @@ const JobCategory = () => {
           dragFree: false,
           align: "center",
         }}
+        className="hover:[&_button]:!bg-bright-sun-400 [&_button]:!border-none [&_button]:hover:opacity-75 [&_button]:opacity-0 hover:[&_button]:opacity-100"
         nextControlIcon={<IconArrowRight size={16} />}
       previousControlIcon={<IconArrowLeft size={16} />}
       >
