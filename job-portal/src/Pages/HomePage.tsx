@@ -3,6 +3,8 @@ import Header from '../Header/Header'
 import DreamJob from '../LandingPage/DreamJob'
 import Companies from '../LandingPage/Companies'
 import JobCategory from '../LandingPage/JobCategory'
+import Working from '../LandingPage/Working'
+import Testimonials from '../LandingPage/Testimonials'
 
 const HomePage = () => {
   return (
@@ -11,6 +13,8 @@ const HomePage = () => {
         <DreamJob/>
         <Companies/>
         <JobCategory/>
+        <Working/>
+        <Testimonials/>
     </div>
     
   )
