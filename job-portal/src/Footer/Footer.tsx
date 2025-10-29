@@ -9,7 +9,7 @@ import { footerLinks } from "../Data/Data";
 
 const Footer = () => {
   return (
-    <div className="mt-20 pb-5 flex gap-5 justify-around">
+    <div className="pt-20 pb-5 flex gap-5 justify-around bg-mine-shaft-950 font-['poppins']">
       <div className="w-1/4 flex flex-col gap-5">
         <div className="flex gap-2 items-center text-bright-sun-400">
           <IconAnchor stroke={2.5} className="h-6 w-6" />

@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <div
       className="w-full bg-mine-shaft-950 h-28 text-white flex justify-between px-6
-        items-center"
+        items-center font-['poppins']"
     >
       <div className="flex gap-2 items-center text-bright-sun-400">
         <IconAnchor stroke={2.5} className="h-8 w-8" />
