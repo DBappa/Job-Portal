@@ -36,6 +36,7 @@ export default function App() {
         "#7a330d",
       ],
     },
+    fontFamily: "Poppins, sans-serif"
   });
 
   return (

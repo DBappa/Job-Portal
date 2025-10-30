@@ -1,16 +1,19 @@
 import { Checkbox, CheckIcon, Combobox, Group, Input, Pill, PillsInput, useCombobox } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
-import { useState } from 'react';
+import { IconSearch, IconSelector } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
 const groceries = ['🍎 Apples', '🍌 Bananas', '🥦 Broccoli', '🥕 Carrots', '🍫 Chocolate'];
 
-const MultiInput =() =>{
+const MultiInput = (props:any) =>{
+    useEffect(() => {
+        setData(props.options);
+    },[])
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
     onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
   });
 
   const [search, setSearch] = useState('');
-  const [data, setData] = useState(groceries);
+  const [data, setData] = useState<string[]>([]);
   const [value, setValue] = useState<string[]>([]);
 
   const exactOptionMatch = data.some((item) => item === search);
@@ -45,7 +48,9 @@ const values = value
       </Pill>
     ));
 
-  const options = groceries.map((item) => (
+  const options = data.
+  filter((item) => item.toLowerCase().includes(search.trim().toLowerCase())).
+  map((item) => (
     <Combobox.Option value={item} key={item} active={value.includes(item)}>
       <Group gap="sm">
         <Checkbox size='xs' color="bright-sun.4"
@@ -55,7 +60,7 @@ const values = value
           tabIndex={-1}
           style={{ pointerEvents: 'none' }}
         />
-        <span>{item}</span>
+        <span className='text-mine-shaft-300'>{item}</span>
       </Group>
     </Combobox.Option>
   ));
@@ -63,9 +68,9 @@ const values = value
   return (
     <Combobox store={combobox} onOptionSubmit={handleValueSelect} withinPortal={false}>
       <Combobox.DropdownTarget>
-        <PillsInput variant='unstyled' rightSection={<Combobox.Chevron/>} 
-        onClick={() => combobox.openDropdown()}
-        leftSection={<div className='text-bright-sun-400 p-1 bg-mine-shaft-900 rounded-full mr-1'><IconSearch/></div>}>
+        <PillsInput variant='unstyled' rightSection={<IconSelector/>} 
+        onClick={() => combobox.toggleDropdown()}
+        leftSection={<div className='text-bright-sun-400 p-1 bg-mine-shaft-900 rounded-full mr-2'><props.icon/></div>}>
           <Pill.Group>
             {/* {values} */}
 
@@ -96,21 +101,8 @@ const values = value
                 )}
               </>
             ) : (
-              <Input.Placeholder>Pick one or more values</Input.Placeholder>
+              <Input.Placeholder className='!text-mine-shaft-200'>{props.title}</Input.Placeholder>
             )}
-
-            <Combobox.EventsTarget>
-              <PillsInput.Field
-                type="hidden"
-                onBlur={() => combobox.closeDropdown()}
-                onKeyDown={(event) => {
-                  if (event.key === 'Backspace' && value.length > 0) {
-                    event.preventDefault();
-                    handleValueRemove(value[value.length - 1]);
-                  }
-                }}
-              />
-            </Combobox.EventsTarget>
           </Pill.Group>
         </PillsInput>
       </Combobox.DropdownTarget>
