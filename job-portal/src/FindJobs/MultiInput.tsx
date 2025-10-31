@@ -1,4 +1,4 @@
-import { Checkbox, CheckIcon, Combobox, Group, Input, Pill, PillsInput, useCombobox } from '@mantine/core';
+import { Checkbox, CheckIcon, Combobox, Group, Input, Pill, PillsInput, ScrollArea, useCombobox } from '@mantine/core';
 import { IconSearch, IconSelector } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 const groceries = ['🍎 Apples', '🍌 Bananas', '🥦 Broccoli', '🥕 Carrots', '🍫 Chocolate'];
@@ -111,10 +111,13 @@ const values = value
         <Combobox.Search
             value={search}
             onChange={(event) => setSearch(event.currentTarget.value)}
-            placeholder="Search groceries"
+            placeholder="Search Choices"
           />
         <Combobox.Options>
-          {options}
+        <ScrollArea.Autosize mah={200} type="scroll">
+            {options}
+        </ScrollArea.Autosize>
+          
 
           {!exactOptionMatch && search.trim().length > 0 && (
             <Combobox.Option value="$create">+ Create {search}</Combobox.Option>
