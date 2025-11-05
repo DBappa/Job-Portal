@@ -1,9 +1,9 @@
 import "@mantine/core/styles.css";
-import '@mantine/carousel/styles.css';
-import '@mantine/tiptap/styles.css';
+import "@mantine/carousel/styles.css";
+import "@mantine/tiptap/styles.css";
 import { createTheme, Divider, MantineProvider } from "@mantine/core";
 import HomePage from "./Pages/HomePage";
-import { BrowserRouter, Routes,Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import FindJobs from "./Pages/FindJobs";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
@@ -46,25 +46,26 @@ export default function App() {
         "#7a330d",
       ],
     },
-    
   });
 
   return (
-    <MantineProvider defaultColorScheme='dark' theme={theme}>
-      <BrowserRouter>
-        <Header/>
-        <Divider size="xs"/>
-        <Routes>
-          <Route path="/find-jobs" element={<FindJobs />} />
-          <Route path="/find-talent" element={<FindTalentPage />} />
-          <Route path="/jobs" element={<JobDescPage/>} />
-          <Route path="/apply-job" element={<ApplyJobPage/>} />
-          <Route path="/talent-profile" element={<TalentProfilePage />} />
-          <Route path="/post-job" element={<PostJobPage/>} />
-          <Route path="*" element={<HomePage/>} />
-        </Routes>
-        <Footer/>
-      </BrowserRouter>
+    <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <div className="relative">
+        <BrowserRouter>
+          <Header />
+          <Divider size="xs" />
+          <Routes>
+            <Route path="/find-jobs" element={<FindJobs />} />
+            <Route path="/find-talent" element={<FindTalentPage />} />
+            <Route path="/jobs" element={<JobDescPage />} />
+            <Route path="/apply-job" element={<ApplyJobPage />} />
+            <Route path="/talent-profile" element={<TalentProfilePage />} />
+            <Route path="/post-job" element={<PostJobPage />} />
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </div>
     </MantineProvider>
   );
 }

@@ -2,6 +2,7 @@ import {
   Button,
   Divider,
   FileInput,
+  LoadingOverlay,
   Notification,
   NumberInput,
   rem,
@@ -10,10 +11,13 @@ import {
 } from "@mantine/core";
 import { IconCheck, IconUpload } from "@tabler/icons-react";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ApplyJob = () => {
   const [preview, setPreview] = useState(false);
   const [submit,setSubmit] = useState(false);
+  const [time,setTime] = useState(5);
+  const navigate = useNavigate();
 
   const handlePreview = () => {
     setPreview(!preview);
@@ -22,11 +26,26 @@ const ApplyJob = () => {
 
   const handleSubmit = () => {
     setSubmit(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    let x=5;
+    setInterval(() => {
+        x--;
+        setTime(x);
+        if(x==1){
+          navigate('/find-jobs');
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    },1000)
   };
   return (
     <>
     <div className="w-2/3 mx-auto">
+    <LoadingOverlay
+      className="!fixed"
+      visible={submit}
+      zIndex={1000}
+      overlayProps={{radius:'sm',blur:2}}
+      loaderProps={{color:'bright-sun.4',type:'bars'}}
+    />
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div className="p-3 bg-mine-shaft-800 rounded-xl">
@@ -138,9 +157,9 @@ const ApplyJob = () => {
     title="Application Submitted"
     withCloseButton={false}
     withBorder
-    className={`!border-bright-sun-400  !fixed top-0 left-[35%] transition duration-1000 ease-in-out z-50 ${submit?"translate-y-0":"-translate-y-20"}`}
+    className={`!border-bright-sun-400  !fixed top-0 left-[35%] transition duration-1000 ease-in-out z-[1001] ${submit?"translate-y-0":"-translate-y-20"}`}
     >
-        <div className="text-mine-shaft-300">Redirecting to Find Jobs in 5 seconds</div>
+        <div className="text-mine-shaft-300">Redirecting to Find Jobs in {time} seconds</div>
         
     </Notification>
     </>
