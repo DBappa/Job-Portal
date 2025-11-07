@@ -1,6 +1,20 @@
-import { ActionIcon, Avatar, Button, Divider, Modal, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  Divider,
+  Modal,
+  Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCalendarMonth, IconClock, IconHeart, IconMapPin } from "@tabler/icons-react";
+import {
+  IconBracketsAngle,
+  IconCalendarMonth,
+  IconClock,
+  IconClockHour10,
+  IconHeart,
+  IconMapPin,
+} from "@tabler/icons-react";
 import { DateInput, TimeInput } from "@mantine/dates";
 
 import React, { useRef, useState } from "react";
@@ -12,7 +26,11 @@ const TalentCard = (props: any) => {
   const [value, setValue] = useState<string | null>(null);
   const ref = useRef<HTMLInputElement>(null);
   const pickerControl = (
-    <ActionIcon variant="subtle" color="bright-sun.4" onClick={() => ref.current?.showPicker()}>
+    <ActionIcon
+      variant="subtle"
+      color="bright-sun.4"
+      onClick={() => ref.current?.showPicker()}
+    >
       <IconClock size={16} stroke={1.5} />
     </ActionIcon>
   );
@@ -51,38 +69,68 @@ const TalentCard = (props: any) => {
         {props.about}
       </Text>
       <Divider size="xs" color="mine-shaft.7" />
-      <div className="flex justify-between">
-        <div className="font-semibold text-mine-shaft-200">
-          &#8377;{props.expectedCtc}
+      {props.invited ? (
+        <div className="flex gap1 text-mine-shaft-200 text-sm text-center justify-between">
+          <IconCalendarMonth className=" text-bright-sun-400 " /> 
+          <div>
+             <IconBracketsAngle className=" text-bright-sun-400 " /> Interview Scheduled
+          </div>
+          <div className="font-semibold">
+            <IconClockHour10 className=" text-bright-sun-400 " />
+             Aug 27, 2025 10:00 AM</div>
         </div>
-        <div className="flex gap-1 text-xs text-mine-shaft-400 items-center">
-          <IconMapPin className="h-5 w-5" stroke={1.5} /> {props.location}
+      ) : (
+        <div className="flex justify-between">
+          <div className="font-semibold text-mine-shaft-200">
+            &#8377;{props.expectedCtc}
+          </div>
+          <div className="flex gap-1 text-xs text-mine-shaft-400 items-center">
+            <IconMapPin className="h-5 w-5" stroke={1.5} /> {props.location}
+          </div>
         </div>
-      </div>
+      )}
+
       <Divider size="xs" color="mine-shaft.7" />
       <div className="flex justify-between [&>*]:w-1/2 [&>*]:p-1">
-        <Link to="/talent-profile">
-          <Button fullWidth color="bright-sun.4" variant="outline">
-            Profile
-          </Button>
-        </Link>
-        <div>
-          {props.posted ? (
-            <Button
-              onClick={open}
-              rightSection={<IconCalendarMonth className="w-5 h-5" />}
-              fullWidth
-              color="bright-sun.4"
-              variant="light"
-            >
-              Schedule
-            </Button>
-          ) : (
-            <Button fullWidth color="bright-sun.4" variant="light">
-              Message
-            </Button>
-          )}
-        </div>
+        {!props.invited ? (
+          <>
+            <Link to="/talent-profile">
+              <Button fullWidth color="bright-sun.4" variant="outline">
+                Profile
+              </Button>
+            </Link>
+            <div>
+              {props.posted ? (
+                <Button
+                  onClick={open}
+                  rightSection={<IconCalendarMonth className="w-5 h-5" />}
+                  fullWidth
+                  color="bright-sun.4"
+                  variant="light"
+                >
+                  Schedule
+                </Button>
+              ) : (
+                <Button fullWidth color="bright-sun.4" variant="light">
+                  Message
+                </Button>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <Button fullWidth color="bright-sun.4" variant="outline">
+                Accept
+              </Button>
+            </div>
+            <div>
+              <Button fullWidth color="bright-sun.4" variant="light">
+                Reject
+              </Button>
+            </div>
+          </>
+        )}
       </div>
       <Modal
         opened={opened}
@@ -98,12 +146,18 @@ const TalentCard = (props: any) => {
             onChange={setValue}
             label="Interview Date"
             placeholder="Enter Date"
-            rightSection={<IconCalendarMonth className="w-5 h-5 text-bright-sun-400 " />}
+            rightSection={
+              <IconCalendarMonth className="w-5 h-5 text-bright-sun-400 " />
+            }
           />
-          <TimeInput label="Interview Time" ref={ref} rightSection={pickerControl} />
+          <TimeInput
+            label="Interview Time"
+            ref={ref}
+            rightSection={pickerControl}
+          />
           <Button fullWidth color="bright-sun.4" variant="light">
-              Schedule
-            </Button>
+            Schedule
+          </Button>
         </div>
       </Modal>
     </div>
