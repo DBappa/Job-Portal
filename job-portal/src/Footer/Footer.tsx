@@ -7,6 +7,7 @@ import {
 } from "@tabler/icons-react";
 import { footerLinks } from "../Data/Data";
 
+
 const Footer = () => {
   return (
     <div className="pt-20 pb-5 flex gap-5 justify-around bg-mine-shaft-950 font-['poppins']">

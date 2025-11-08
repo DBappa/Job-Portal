@@ -4,6 +4,7 @@ import { Avatar, Indicator } from "@mantine/core";
 import NavLinks from "./NavLinks";
 
 const Header = () => {
+  
   return (
     <div
       className="w-full bg-mine-shaft-950 h-28 text-white flex justify-between px-6
