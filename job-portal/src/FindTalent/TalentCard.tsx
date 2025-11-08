@@ -71,13 +71,15 @@ const TalentCard = (props: any) => {
       <Divider size="xs" color="mine-shaft.7" />
       {props.invited ? (
         <div className="flex gap1 text-mine-shaft-200 text-sm text-center justify-between">
-          <IconCalendarMonth className=" text-bright-sun-400 " /> 
-          <div>
-             <IconBracketsAngle className=" text-bright-sun-400 " /> Interview Scheduled
+          <div className="flex items-center font-semibold">
+            <IconCalendarMonth className=" text-bright-sun-400 " />
+            <span className="font-semibold">Interview</span>
           </div>
-          <div className="font-semibold">
+
+          <div className="flex items-center font-semibold">
             <IconClockHour10 className=" text-bright-sun-400 " />
-             Aug 27, 2025 10:00 AM</div>
+            Aug 27, 2025 10:00 AM
+          </div>
         </div>
       ) : (
         <div className="flex justify-between">
