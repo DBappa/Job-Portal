@@ -17,6 +17,7 @@ import CompanyPage from "./Pages/CompanyPage";
 import PostedJobPage from "./Pages/PostedJobPage";
 import JobHistoryPage from "./Pages/JobHistoryPage";
 import SignUpPages from "./Pages/SignUpPages";
+import ProfilePage from "./Pages/ProfilePage";
 
 
 function AppContent() {
@@ -39,6 +40,8 @@ function AppContent() {
         <Route path="/job-history" element={<JobHistoryPage />} />
         <Route path="/signup" element={<SignUpPages />} />
         <Route path="/login" element={<SignUpPages />} />
+        <Route path="/profile" element={<ProfilePage />} />
+
         <Route path="*" element={<HomePage />} />
       </Routes>
       {!hideDivider && <Footer />} 
