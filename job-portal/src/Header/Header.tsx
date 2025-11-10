@@ -2,6 +2,7 @@ import { IconAnchor, IconSettings } from "@tabler/icons-react";
 import { IconBell } from "@tabler/icons-react";
 import { Avatar, Indicator } from "@mantine/core";
 import NavLinks from "./NavLinks";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   
@@ -10,10 +11,10 @@ const Header = () => {
       className="w-full bg-mine-shaft-950 h-28 text-white flex justify-between px-6
         items-center font-['poppins']"
     >
-      <div className="flex gap-2 items-center text-bright-sun-400">
+      <Link to="/" className="flex gap-2 items-center text-bright-sun-400">
         <IconAnchor stroke={2.5} className="h-8 w-8" />
         <div className="text-3xl font-semibold">JobHook</div>
-      </div>
+      </Link>
       {NavLinks()}
       <div className="flex gap-3 items-center">
         <div className="flex items-center gap-2">

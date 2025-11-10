@@ -6,9 +6,9 @@ import Card from "./Card";
 const JobHistory = () => {
   return (
     <div>
-      <div className="text-2xl font-semibold mb-5">Job History</div>
+      <div className="text-2xl font-semibold mb-5 py-2">Job History</div>
       <div>
-        <Tabs variant="outline" radius="lg" defaultValue="about">
+        <Tabs variant="outline" radius="lg" defaultValue="applied">
           <Tabs.List className="[&_button]:text-lg font-semibold mb-5 [&_button[data-active='true']]:text-bright-sun-400">
             <Tabs.Tab value="applied">Applied</Tabs.Tab>
             <Tabs.Tab value="saved">Saved</Tabs.Tab>

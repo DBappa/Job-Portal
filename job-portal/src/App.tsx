@@ -21,7 +21,7 @@ import SignUpPages from "./Pages/SignUpPages";
 
 function AppContent() {
   const location = useLocation();
-  const hideDivider = location.pathname === "/signup";
+  const hideDivider = location.pathname === "/signup" || location.pathname === "/login";
 
   return (
     <>
@@ -38,6 +38,7 @@ function AppContent() {
         <Route path="/posted-jobs" element={<PostedJobPage />} />
         <Route path="/job-history" element={<JobHistoryPage />} />
         <Route path="/signup" element={<SignUpPages />} />
+        <Route path="/login" element={<SignUpPages />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
       {!hideDivider && <Footer />} 
