@@ -4,7 +4,7 @@ import { IconBriefcase, IconMapPin } from "@tabler/icons-react";
 import EmployeeExpCard from "./EmployeeExpCard";
 import EmployeeCertificateCard from "./EmployeeCertificateCard";
 
-const Profile = (props:any) => {
+const EmployeeProfile = (props:any) => {
   return (
     <div className="w-2/3">
       <div className="relative">
@@ -60,4 +60,4 @@ const Profile = (props:any) => {
   );
 };
 
-export default Profile;
+export default EmployeeProfile;
