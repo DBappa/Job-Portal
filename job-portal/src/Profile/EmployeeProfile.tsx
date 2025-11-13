@@ -175,7 +175,7 @@ const EmployeeProfile = (props: any) => {
         <div className="flex flex-col gap-3">
           {props.experience &&
             props.experience.map((exp: any, index: any) => (
-              <EmployeeExpCard key={index} {...exp} />
+              <EmployeeExpCard key={index} {...exp} edit={edit[3]} />
             ))}
         </div>
       </div>
