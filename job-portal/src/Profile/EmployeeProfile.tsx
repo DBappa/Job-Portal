@@ -1,14 +1,10 @@
-import {
-  ActionIcon,
-  Divider,
-  TagsInput,
-  Textarea,
-} from "@mantine/core";
+import { ActionIcon, Divider, TagsInput, Textarea } from "@mantine/core";
 import {
   IconBriefcase,
   IconDeviceFloppy,
   IconEdit,
   IconMapPin,
+  IconPlus,
 } from "@tabler/icons-react";
 
 import EmployeeExpCard from "./EmployeeExpCard";
@@ -16,11 +12,15 @@ import EmployeeCertificateCard from "./EmployeeCertificateCard";
 import { useState } from "react";
 import SelectInput from "./SelectInput";
 import fields from "../Data/Profile";
+import ExpInput from "./ExpInput";
+import CertiInput from "./CertiInput";
 
 const EmployeeProfile = (props: any) => {
   const [edit, setEdit] = useState([false, false, false, false, false]);
   const [about, setAbout] = useState(props.about);
   const [skills, setSkills] = useState<string[]>(props.skills);
+  const [addExp, setAddExp] = useState(false);
+  const [addCert, setAddCert] = useState(false);
 
   const select = fields;
   const handleEdit = (index: number) => {
@@ -126,9 +126,12 @@ const EmployeeProfile = (props: any) => {
         </div>
         {edit[2] ? (
           <>
-            <TagsInput  value={skills} onChange={setSkills} 
-            placeholder="Add your skills..."
-            splitChars={[" ", ",", "\n","|"]} />
+            <TagsInput
+              value={skills}
+              onChange={setSkills}
+              placeholder="Add your skills..."
+              splitChars={[" ", ",", "\n", "|"]}
+            />
           </>
         ) : (
           <div className="flex flex-wrap gap-2">
@@ -159,24 +162,36 @@ const EmployeeProfile = (props: any) => {
       <div className="px-3">
         <div className="text-2xl font-semibold mb-5 flex justify-between">
           Experience{" "}
-          <ActionIcon
-            onClick={() => handleEdit(3)}
-            variant="subtle"
-            size="lg"
-            color="bright-sun.4"
-          >
-            {edit[3] ? (
-              <IconDeviceFloppy className="h-4/5 w4/5" stroke={2.5} />
-            ) : (
-              <IconEdit className="h-4/5 w4/5" stroke={2.5} />
-            )}
-          </ActionIcon>
+          <div className="flex gap-2">
+            <ActionIcon
+              onClick={() => setAddExp(true)}
+              variant="subtle"
+              size="lg"
+              color="bright-sun.4"
+            >
+              <IconPlus className="h-4/5 w4/5" stroke={2.5} />
+              </ActionIcon>
+            <ActionIcon
+              onClick={() => handleEdit(3)}
+              variant="subtle"
+              size="lg"
+              color="bright-sun.4"
+            >
+              {edit[3] ? (
+                <IconDeviceFloppy className="h-4/5 w4/5" stroke={2.5} />
+              ) : (
+                <IconEdit className="h-4/5 w4/5" stroke={2.5} />
+              )}
+            </ActionIcon>
+          </div>
         </div>
         <div className="flex flex-col gap-3">
+          {addExp && <ExpInput addExp={addExp} setEdit={setAddExp} />}
           {props.experience &&
             props.experience.map((exp: any, index: any) => (
               <EmployeeExpCard key={index} {...exp} edit={edit[3]} />
             ))}
+            
         </div>
       </div>
 
@@ -184,24 +199,35 @@ const EmployeeProfile = (props: any) => {
       <div className="px-3">
         <div className="text-2xl font-semibold mb-5 flex justify-between ">
           Certifications{" "}
-          <ActionIcon
-            onClick={() => handleEdit(4)}
-            variant="subtle"
-            size="lg"
-            color="bright-sun.4"
-          >
-            {edit[4] ? (
-              <IconDeviceFloppy className="h-4/5 w4/5" stroke={2.5} />
-            ) : (
-              <IconEdit className="h-4/5 w4/5" stroke={2.5} />
-            )}
-          </ActionIcon>
+          <div className="flex gap-2">
+            <ActionIcon
+              onClick={() => setAddCert(true)}
+              variant="subtle"
+              size="lg"
+              color="bright-sun.4"
+            >
+              <IconPlus className="h-4/5 w4/5" stroke={2.5} />
+              </ActionIcon>
+            <ActionIcon
+              onClick={() => handleEdit(4)}
+              variant="subtle"
+              size="lg"
+              color="bright-sun.4"
+            >
+              {edit[4] ? (
+                <IconDeviceFloppy className="h-4/5 w4/5" stroke={2.5} />
+              ) : (
+                <IconEdit className="h-4/5 w4/5" stroke={2.5} />
+              )}
+            </ActionIcon>
+          </div>
         </div>
         <div className="flex flex-col gap-3">
           {props.certifications &&
             props.certifications.map((cer: any, index: any) => (
-              <EmployeeCertificateCard key={index} {...cer} />
+              <EmployeeCertificateCard edit={edit[4]} key={index} {...cer} />
             ))}
+            {addCert && <CertiInput addCert={addCert} setEdit={setAddCert} />}
         </div>
       </div>
     </div>
