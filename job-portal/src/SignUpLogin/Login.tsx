@@ -1,7 +1,6 @@
 import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { IconAt, IconLock } from "@tabler/icons-react";
 import { useState } from "react";
-import React from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../Services/UserService";
 
@@ -32,6 +31,7 @@ const Login = () => {
       <div className="text-2xl font-semibold ">Login</div>
       
       <TextInput
+        name="email"
         withAsterisk
         leftSection={<IconAt size={16} />}
         label="Your email"
@@ -40,6 +40,7 @@ const Login = () => {
         onChange={handleChange}
       />
       <PasswordInput
+        name="password"
         withAsterisk
         leftSection={<IconLock size={18} stroke={1.5} />}
         label="Password"
