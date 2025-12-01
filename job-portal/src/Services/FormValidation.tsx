@@ -38,4 +38,30 @@ const signupValidation=(name:string,value:string,passwordValue:string)=>{
     }   
 }
 
-export  {signupValidation}
+const loginValidation=(name:string,value:string)=>{
+    switch(name){
+        case 'name': 
+            if(value.length===0){
+                return "Name is required";
+            }
+            return "";
+        case "email":
+            if(value.length===0){
+                return "Email is required";  
+            }
+            if(!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)){
+                return "Email is invalid";
+            }
+            return "";
+        case "password":
+            if(value.length===0){
+                return "Password is required";
+            }
+            
+            return "";      
+        default:
+            return "";
+    }  
+
+}
+export  {signupValidation,loginValidation}

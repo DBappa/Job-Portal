@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { IconAt, IconCheck, IconLock, IconX } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { registerUser } from "../Services/UserService";
 import { signupValidation } from "../Services/FormValidation";
 import { notifications } from "@mantine/notifications";
@@ -86,6 +86,11 @@ const SignUp = () => {
       });
   };
 
+  const redirectToLogin=()=>{
+    navigate("/login");
+    setData(form);
+    setFormError(form);
+  }
 
   return (
     <div className="w-1/2 px-20 flex flex-col gap-3 justify-center">
@@ -167,9 +172,9 @@ const SignUp = () => {
       </Button>
       <div className="mx-auto">
         Have an account?{" "}
-        <Link className="text-bright-sun-400 hover:underline" to="/login">
+        <span className="text-bright-sun-400 hover:underline cursor-pointer" onClick={()=>redirectToLogin()}>
           Login
-        </Link>
+        </span>
       </div>
     </div>
   );

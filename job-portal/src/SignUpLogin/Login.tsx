@@ -1,35 +1,104 @@
 import { Button, PasswordInput, TextInput } from "@mantine/core";
-import { IconAt, IconLock } from "@tabler/icons-react";
+import { IconAt, IconCheck, IconLock, IconX } from "@tabler/icons-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../Services/UserService";
+import { loginValidation } from "../Services/FormValidation";
+import { notifications } from "@mantine/notifications";
 
-
-const form={
-  email:"",
-  password:""
-}
+const form = {
+  email: "",
+  password: "",
+};
 
 const Login = () => {
+  const [data, setData] = useState<{ [key: string]: string }>(form);
+  const [formError, setFormError] = useState<{ [key: string]: string }>(form);
+  const [redirect, setRedirect] = useState(4000);
+  const navigate = useNavigate();
 
-  const [data,setData]=useState(form);
+  const handleChange = (e: any) => {
+    let name = e.target.name;
+    let value = e.target.value;
+    setData({ ...data, [e.target.name]: e.target.value });
+    setFormError({ ...formError, [name]: loginValidation(name, value) });
+    
+  };
 
-  const handleChange=(e:any)=>{
-    setData({...data,[e.target.name]:e.target.value});
-  }
+  const handleSubmit = () => {
+    for (let key in data) {
+       formError[key]=loginValidation(key, data[key]);
+    }
+    setFormError({ ...formError });
 
-  const handleSubmit=()=>{
-    loginUser(data).then((res)=>{
-      console.log(res);
-    }).catch((err)=>{
-      console.log(err);
-    })
-  }
+    console.log(formError);
+    if (
+      formError.email ||
+      formError.password
+      
+    ) {
+      return;
+    }
+    loginUser(data)
+      .then((res) => {
+        console.log(res);
+        setData(form);
+        notifications.show({
+          title: 'Success',
+          message: 'Login successful! Redirecting to Home..',
+          withCloseButton: true,
+          icon: <IconCheck style={{width:"90%",height:"90%"}}/>,
+          color: 'teal',
+          withBorder: true,
+          className:"!border-green-500"
+        });
+         setTimeout(() => {
+            if(res.accountType==="EMPLOYER"){
+              navigate("/find-talent");
+            }else{
+              navigate("/find-jobs");
+            }
+            
+          }, 4000);
+      })
+      .catch((err) => {
+        console.log(err);
+        
+        notifications.show({
+          title: 'Failure',
+          message: err.response.data.errorMessage,
+          withCloseButton: true,
+          icon: <IconX style={{width:"90%",height:"90%"}}/>,
+          color: 'red',
+          withBorder: true,
+          className:"!border-red-500"
+        });
+
+        if(err.response.data.errorMessage){
+          setFormError(form);
+          setData(form);
+          if(err.response.data.errorMessage==="User is not registered" || err.response.data.errorMessage.includes("not registered")){
+          notifications.show({
+          title: 'Redirecting to Signup',
+          message: `in ${redirect/1000} seconds...`,
+          withCloseButton: true,
+          icon: <IconCheck style={{width:"90%",height:"90%"}}/>,
+          color: 'teal',
+          withBorder: true,
+          className:"!border-teal-500"
+        });
+            setTimeout(()=>{
+              navigate("/signup");
+            },redirect);
+          }
+        }
+      });
+  };
 
   return (
     <div className="w-1/2 px-20 flex flex-col gap-3 justify-center">
       <div className="text-2xl font-semibold ">Login</div>
-      
+
       <TextInput
         name="email"
         withAsterisk
@@ -49,10 +118,25 @@ const Login = () => {
         onChange={handleChange}
       />
 
-      <Button onClick={handleSubmit} autoContrast color="bright-sun.4" variant="filled">
+      <Button
+        onClick={handleSubmit}
+        autoContrast
+        color="bright-sun.4"
+        variant="filled"
+      >
         Log in
       </Button>
-       <div className="mx-auto"> Don't have an account? <Link className="text-bright-sun-400 hover:underline" to="/signup">Signup</Link></div>
+      <div className="mx-auto">
+        {" "}
+        Don't have an account?{" "}
+        <span className="text-bright-sun-400 hover:underline cursor-pointer" onClick={()=>{
+          navigate("/signup");
+          setData(form);
+          setFormError(form);
+        }}>
+          Signup
+        </span>
+      </div>
     </div>
   );
 };
