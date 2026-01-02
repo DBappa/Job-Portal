@@ -1,12 +1,13 @@
 import { Button, Modal, PasswordInput, PinInput, TextInput } from "@mantine/core";
 import { IconAt, IconLock } from "@tabler/icons-react";
 import React, { useState } from "react";
-import { sendOtp, verifyOtp } from "../Services/UserService";
+import { resetPassword, sendOtp, verifyOtp } from "../Services/UserService";
 import { signupValidation } from "../Services/FormValidation";
-import { successNotification } from "../Services/NotificationService";
+import { failureNotification, successNotification } from "../Services/NotificationService";
 
 const ResetPassword = (props: any) => {
   const [email, setEmail] = useState("");
+  const [attempt,setAttempt]=useState(3);
   const [password, setPassword] = useState("");
   const [passError, setPassError] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -17,12 +18,14 @@ const ResetPassword = (props: any) => {
     setOtpSending(true);
     sendOtp(email)
       .then((res) => {
+        console.log(res);
         successNotification("OTP Sent", "Please check your email for the OTP.");
         setOtpSent(true);
         setOtpSending(false);
       })
       .catch((err) => {
         console.log(err);
+        failureNotification("Failed to send OTP", err.response.data.errorMessage || "Please try again later.");
         setOtpSent(false);
         setOtpSending(false);
       });
@@ -34,21 +37,37 @@ const ResetPassword = (props: any) => {
     verifyOtp(email, value)
       .then((res) => {
         console.log(res);
+        successNotification("OTP Verified", "You can now reset your password.");
         setVerified(true);
       })
       .catch((err) => {
+        setAttempt(attempt-1);
+        failureNotification("Failed to verify OTP", `${attempt-1} attempts left`);
+        if((attempt-1)===0){
+            setOtpSent(false);
+            setVerified(false);
+            setOtpSending(false);
+            failureNotification("No attempts left", "Please request a new OTP.");
+            setEmail("");
+        }
         console.log(err);
       });
   };
 
   const resendOtp = () => {
     setOtpSending(true);
+    setOtpSent(false);
     sendOtp(email)
       .then((res) => {
+        console.log(res);
+        successNotification("OTP Sent", "Please check your email for the OTP.");
+        setOtpSending(false);
         setOtpSent(true);
+
       })
       .catch((err) => {
         console.log(err);
+        failureNotification("Failed to send OTP", err.response.data.errorMessage || "Please try again later.");
         setOtpSent(false);
         setOtpSending(false);
       });
@@ -60,7 +79,16 @@ const ResetPassword = (props: any) => {
   };
 
   const handleResetPassword = () => {
-    
+    resetPassword(email, password)
+      .then((res) => {
+        console.log(res);
+        successNotification("Password Reset", "Your password has been reset successfully.");
+        props.close();
+      })
+      .catch((err) => {
+        console.log(err);
+        failureNotification("Failed to reset password", err.response.data.errorMessage || "Please try again later.");
+      });
     console.log(`Resetting password for ${email} to ${password}`);
   };
 
@@ -71,7 +99,7 @@ const ResetPassword = (props: any) => {
           <div className="flex flex-col gap-6">
             <TextInput
               name="email"
-              size="md"
+              size="sm"
               withAsterisk
               leftSection={<IconAt size={16} />}
               label="Your email"
@@ -82,19 +110,19 @@ const ResetPassword = (props: any) => {
                 <Button
                   loading={otpSending}
                   size="xs"
-                  className="mr-1"
+                  className="mx-1"
                   onClick={handleSendOtp}
                   autoContrast
                   disabled={email === "" || otpSent}
                   color="bright-sun.4"
                   variant="filled"
                 >
-                  Email
+                  Send OTP
                 </Button>
               }
               rightSectionWidth="xl"
             />
-            {otpSent && (
+            {otpSent && attempt>0 && (
               <PinInput
                 length={6}
                 className="mx-auto"
@@ -106,7 +134,7 @@ const ResetPassword = (props: any) => {
                 onComplete={handleVerifyOtp}
               />
             )}
-            {otpSent && !verified && (
+            {otpSent && !verified &&  (
               <div className="flex gap-2">
                 <Button
                   fullWidth
@@ -116,7 +144,7 @@ const ResetPassword = (props: any) => {
                   color="bright-sun.4"
                   variant="light"
                 >
-                  Email
+                  Resend
                 </Button>
                 <Button
                   fullWidth
@@ -157,9 +185,9 @@ const ResetPassword = (props: any) => {
         }
       </Modal>
 
-      <Button variant="default" onClick={props.open}>
+      {/* <Button variant="default" onClick={props.open}>
         Open modal
-      </Button>
+      </Button> */}
     </>
   );
 };
