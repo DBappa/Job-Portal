@@ -12,11 +12,25 @@ import {
   IconMoonStars,
   IconLogout,
 } from "@tabler/icons-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../Slices/UserSlice";
 
 const ProfileMenu = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); 
+  const user=useSelector((state:any)=>state.user);
   const [checked, setChecked] = useState(false);
   const [opened, setOpened] = useState(false);
+
+  const handleLogout = () => {
+
+    dispatch(removeUser());
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   return (
     <Menu shadow="md" width={200} opened={opened} onChange={setOpened}>
       <Menu.Target>
@@ -54,7 +68,7 @@ const ProfileMenu = () => {
         </Menu.Item>
 
         <Menu.Divider />
-        <Menu.Item color="red" leftSection={<IconLogout size={14} />}>
+        <Menu.Item onClick={handleLogout} color="red" leftSection={<IconLogout size={14} />}>
           Logout
         </Menu.Item>
       </Menu.Dropdown>

@@ -7,6 +7,8 @@ import { loginValidation } from "../Services/FormValidation";
 import { notifications } from "@mantine/notifications";
 import { useDisclosure } from "@mantine/hooks";
 import ResetPassword from "./ResetPassword";
+import { useDispatch } from "react-redux";
+import { setUser } from "../Slices/UserSlice";
 
 const form = {
   email: "",
@@ -14,6 +16,7 @@ const form = {
 };
 
 const Login = () => {
+  const dispatch=useDispatch();
   const [data, setData] = useState<{ [key: string]: string }>(form);
   const [formError, setFormError] = useState<{ [key: string]: string }>(form);
   const [redirect, setRedirect] = useState(4000);
@@ -51,6 +54,7 @@ const Login = () => {
           className: "!border-green-500",
         });
         setTimeout(() => {
+          dispatch(setUser(res));
           if (res.accountType === "EMPLOYER") {
             navigate("/find-talent");
           } else {

@@ -7,6 +7,7 @@ import { createTheme, Divider, MantineProvider} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import HomePage from "./Pages/HomePage";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Provider } from "react-redux";
 import FindJobs from "./Pages/FindJobs";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
@@ -20,6 +21,7 @@ import PostedJobPage from "./Pages/PostedJobPage";
 import JobHistoryPage from "./Pages/JobHistoryPage";
 import SignUpPages from "./Pages/SignUpPages";
 import ProfilePage from "./Pages/ProfilePage";
+import Store from "./Store";
 
 
 function AppContent() {
@@ -88,6 +90,7 @@ export default function App() {
   });
 
   return (
+    <Provider store={Store}>
     <MantineProvider defaultColorScheme="dark" theme={theme}>
       <Notifications position="top-center" zIndex={1000} />
       <div className="relative">
@@ -96,5 +99,6 @@ export default function App() {
         </BrowserRouter>
       </div>
     </MantineProvider>
+    </Provider>
   );
 }
