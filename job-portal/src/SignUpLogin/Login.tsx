@@ -1,4 +1,4 @@
-import { Button, PasswordInput, TextInput } from "@mantine/core";
+import { Button, LoadingOverlay, PasswordInput, TextInput } from "@mantine/core";
 import { IconAt, IconCheck, IconLock, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ const form = {
 };
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const dispatch=useDispatch();
   const [data, setData] = useState<{ [key: string]: string }>(form);
   const [formError, setFormError] = useState<{ [key: string]: string }>(form);
@@ -31,6 +32,7 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     for (let key in data) {
       formError[key] = loginValidation(key, data[key]);
     }
@@ -54,6 +56,7 @@ const Login = () => {
           className: "!border-green-500",
         });
         setTimeout(() => {
+          setLoading(false);
           dispatch(setUser(res));
           if (res.accountType === "EMPLOYER") {
             navigate("/find-talent");
@@ -101,6 +104,12 @@ const Login = () => {
 
   return (
     <>
+      <LoadingOverlay
+          visible={loading}
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 2 }}
+          loaderProps={{ color: 'bright-sun.4', type: 'bars' }}
+        />
       <div className="w-1/2 px-20 flex flex-col gap-3 justify-center">
         <div className="text-2xl font-semibold ">Login</div>
 
@@ -124,6 +133,7 @@ const Login = () => {
         />
 
         <Button
+          loading={loading}
           onClick={handleSubmit}
           autoContrast
           color="bright-sun.4"
