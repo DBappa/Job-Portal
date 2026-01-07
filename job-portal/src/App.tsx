@@ -6,8 +6,8 @@ import '@mantine/notifications/styles.css';
 import { createTheme, Divider, MantineProvider} from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import HomePage from "./Pages/HomePage";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Provider } from "react-redux";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Provider, useSelector } from "react-redux";
 import FindJobs from "./Pages/FindJobs";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
@@ -22,11 +22,14 @@ import JobHistoryPage from "./Pages/JobHistoryPage";
 import SignUpPages from "./Pages/SignUpPages";
 import ProfilePage from "./Pages/ProfilePage";
 import Store from "./Store";
+import { getItem } from "./Services/LocalStorageService";
 
 
 function AppContent() {
   const location = useLocation();
   const hideDivider = location.pathname === "/signup" || location.pathname === "/login";
+
+  const user=useSelector((state:any)=>state.user);
 
   return (
     <>
@@ -42,8 +45,8 @@ function AppContent() {
         <Route path="/post-job" element={<PostJobPage />} />
         <Route path="/posted-jobs" element={<PostedJobPage />} />
         <Route path="/job-history" element={<JobHistoryPage />} />
-        <Route path="/signup" element={<SignUpPages />} />
-        <Route path="/login" element={<SignUpPages />} />
+        <Route path="/signup" element={user?<Navigate to="/" />:<SignUpPages />} />
+        <Route path="/login" element={user?<Navigate to="/" />:<SignUpPages />} />
         <Route path="/profile" element={<ProfilePage />} />
 
         <Route path="*" element={<HomePage />} />
@@ -89,13 +92,16 @@ export default function App() {
     },
   });
 
+  // const user=getItem("user");
+
   return (
+    
     <Provider store={Store}>
     <MantineProvider defaultColorScheme="dark" theme={theme}>
       <Notifications position="top-center" zIndex={1000} />
       <div className="relative">
         <BrowserRouter>
-          <AppContent />
+          <AppContent/>
         </BrowserRouter>
       </div>
     </MantineProvider>
