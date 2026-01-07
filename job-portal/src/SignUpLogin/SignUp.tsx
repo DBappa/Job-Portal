@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Group,
+  LoadingOverlay,
   PasswordInput,
   Radio,
   TextInput,
@@ -24,9 +25,10 @@ const form = {
 
 const SignUp = () => {
   const [value, setValue] = useState("APPLICANT");
-  const [data, setData] = useState<{[key: string]:string}>(form);
-  const [formError, setFormError] = useState<{[key: string]:string}>(form);
+  const [data, setData] = useState<{ [key: string]: string }>(form);
+  const [formError, setFormError] = useState<{ [key: string]: string }>(form);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: any) => {
     if (typeof e === "string") {
@@ -35,14 +37,16 @@ const SignUp = () => {
     let name = e.target.name;
     let value = e.target.value;
     setData({ ...data, [name]: value });
-    setFormError({ ...formError, [name]: signupValidation(name, value,data.password) });
+    setFormError({
+      ...formError,
+      [name]: signupValidation(name, value, data.password),
+    });
   };
 
   const handleSubmit = () => {
-    
     for (let key in data) {
-      if(key==="accountType") continue;
-      formError[key]=signupValidation(key, data[key],data.password)
+      if (key === "accountType") continue;
+      formError[key] = signupValidation(key, data[key], data.password);
     }
     setFormError({ ...formError });
 
@@ -55,128 +59,145 @@ const SignUp = () => {
     ) {
       return;
     }
+
+    setLoading(true);
     registerUser(data)
       .then((res) => {
         console.log(res);
         setData(form);
         notifications.show({
-          title: 'Success',
-          message: 'Registration successful! Redirecting to login..',
+          title: "Success",
+          message: "Registration successful! Redirecting to login..",
           withCloseButton: true,
-          icon: <IconCheck style={{width:"90%",height:"90%"}}/>,
-          color: 'teal',
+          icon: <IconCheck style={{ width: "90%", height: "90%" }} />,
+          color: "teal",
           withBorder: true,
-          className:"!border-green-500"
+          className: "!border-green-500",
         });
-          setTimeout(() => {
-            navigate("/login");
-          }, 4000);
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/login");
+        }, 4000);
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
         notifications.show({
-          title: 'Failure',
+          title: "Failure",
           message: err.response.data.errorMessage,
           withCloseButton: true,
-          icon: <IconX style={{width:"90%",height:"90%"}}/>,
-          color: 'red',
+          icon: <IconX style={{ width: "90%", height: "90%" }} />,
+          color: "red",
           withBorder: true,
-          className:"!border-red-500"
+          className: "!border-red-500",
         });
       });
   };
 
-  const redirectToLogin=()=>{
+  const redirectToLogin = () => {
     navigate("/login");
     setData(form);
     setFormError(form);
-  }
+  };
 
   return (
-    <div className="w-1/2 px-20 flex flex-col gap-3 justify-center">
-      <div className="text-2xl font-semibold ">Create Account</div>
-      <TextInput
-        value={data.name}
-        name="name"
-        onChange={handleChange}
-        withAsterisk
-        label="Full Name"
-        placeholder="Your Name"
-        error={formError.name}
+    <>
+      <LoadingOverlay
+        visible={loading}
+        zIndex={1000}
+        className="translate-x-1/2"
+        overlayProps={{ radius: "sm", blur: 2 }}
+        loaderProps={{ color: "bright-sun.4", type: "bars" }}
       />
-      <TextInput
-        name="email"
-        withAsterisk
-        leftSection={<IconAt size={16} />}
-        label="Your email"
-        placeholder="Your email"
-        value={data.email}
-        onChange={handleChange}
-        error={formError.email}
-      />
-      <PasswordInput
-        name="password"
-        withAsterisk
-        leftSection={<IconLock size={18} stroke={1.5} />}
-        label="Password"
-        placeholder="Password"
-        value={data.password}
-        onChange={handleChange}
-        error={formError.password}
-      />
-      <PasswordInput
-        name="confirmPassword"
-        withAsterisk
-        leftSection={<IconLock size={18} stroke={1.5} />}
-        label="Confirm Password"
-        placeholder="Confirm Password"
-        value={data.confirmPassword}
-        onChange={handleChange}
-        error={formError.confirmPassword}
-      />
-      <Radio.Group
-        value={data.accountType}
-        onChange={handleChange}
-        label="You are?"
-        withAsterisk
-      >
-        <Group mt="xs">
-          <Radio
-            className="py-4 px-6 border hover:bg-mine-shaft-900 border-mine-shaft-800 rounded-lg has-[:checked]:border-bright-sun-400"
-            value="APPLICANT"
-            label="Applicant"
-          />
-          <Radio
-            className="py-4 px-6 border hover:bg-mine-shaft-900 border-mine-shaft-800 rounded-lg has-[:checked]:border-bright-sun-400"
-            value="EMPLOYER"
-            label="Employer"
-          />
-        </Group>
-      </Radio.Group>
-      <Checkbox
-        autoContrast
-        label={
-          <>
-            I accept <Anchor href="#">terms and conditions</Anchor>
-          </>
-        }
-      />
+      <div className="w-1/2 px-20 flex flex-col gap-3 justify-center">
+        <div className="text-2xl font-semibold ">Create Account</div>
+        <TextInput
+          value={data.name}
+          name="name"
+          onChange={handleChange}
+          withAsterisk
+          label="Full Name"
+          placeholder="Your Name"
+          error={formError.name}
+        />
+        <TextInput
+          name="email"
+          withAsterisk
+          leftSection={<IconAt size={16} />}
+          label="Your email"
+          placeholder="Your email"
+          value={data.email}
+          onChange={handleChange}
+          error={formError.email}
+        />
+        <PasswordInput
+          name="password"
+          withAsterisk
+          leftSection={<IconLock size={18} stroke={1.5} />}
+          label="Password"
+          placeholder="Password"
+          value={data.password}
+          onChange={handleChange}
+          error={formError.password}
+        />
+        <PasswordInput
+          name="confirmPassword"
+          withAsterisk
+          leftSection={<IconLock size={18} stroke={1.5} />}
+          label="Confirm Password"
+          placeholder="Confirm Password"
+          value={data.confirmPassword}
+          onChange={handleChange}
+          error={formError.confirmPassword}
+        />
+        <Radio.Group
+          value={data.accountType}
+          onChange={handleChange}
+          label="You are?"
+          withAsterisk
+        >
+          <Group mt="xs">
+            <Radio
+              className="py-4 px-6 border hover:bg-mine-shaft-900 border-mine-shaft-800 rounded-lg has-[:checked]:border-bright-sun-400"
+              value="APPLICANT"
+              label="Applicant"
+            />
+            <Radio
+              className="py-4 px-6 border hover:bg-mine-shaft-900 border-mine-shaft-800 rounded-lg has-[:checked]:border-bright-sun-400"
+              value="EMPLOYER"
+              label="Employer"
+            />
+          </Group>
+        </Radio.Group>
+        <Checkbox
+          autoContrast
+          label={
+            <>
+              I accept <Anchor href="#">terms and conditions</Anchor>
+            </>
+          }
+        />
 
-      <Button
-        onClick={handleSubmit}
-        autoContrast
-        color="bright-sun.4"
-        variant="filled"
-      >
-        Sign up
-      </Button>
-      <div className="mx-auto">
-        Have an account?{" "}
-        <span className="text-bright-sun-400 hover:underline cursor-pointer" onClick={()=>redirectToLogin()}>
-          Login
-        </span>
+        <Button
+          loading={loading}
+          onClick={handleSubmit}
+          autoContrast
+          color="bright-sun.4"
+          variant="filled"
+        >
+          Sign up
+        </Button>
+        <div className="mx-auto">
+          Have an account?{" "}
+          <span
+            className="text-bright-sun-400 hover:underline cursor-pointer"
+            onClick={() => redirectToLogin()}
+          >
+            Login
+          </span>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
